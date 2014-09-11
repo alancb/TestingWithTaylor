@@ -68,6 +68,7 @@ static CGFloat percentWidthOfStepper = 0.30;            //should add up to 1.0
     
     UITextField * nameField = [[UITextField alloc] initWithFrame:CGRectMake(margin, 0, widthOfNameField, scoreViewHeight)];
     nameField.placeholder = @"Name";
+    nameField.delegate = (id)self;
     
     UILabel * scoreLabel = [[UILabel alloc] initWithFrame:CGRectMake(margin + widthOfNameField, 0, widthOfScoreLabel, scoreViewHeight)];
     scoreLabel.text = @"0";
@@ -95,6 +96,16 @@ static CGFloat percentWidthOfStepper = 0.30;            //should add up to 1.0
 {
     UILabel * labelToBeUpdated = self.scoreLabelArray[sender.tag];
     labelToBeUpdated.text = [NSString stringWithFormat:@"%.f", sender.value];
+}
+
+/*
+ * delegate that will dismiss the keyboard when the textFields return
+ */
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return YES;
 }
 
 /*
