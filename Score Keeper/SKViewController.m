@@ -11,15 +11,16 @@
 static CGFloat margin = 15;                             //side margins
 static CGFloat scoreViewHeight = 64;                    //scoreViewHeight
 static CGFloat percentWidthOfNameField = 0.55;
-static CGFloat percentWidthOfScoreLabel = 0.15;
+static CGFloat percentWidthOfScoreField = 0.15;
 static CGFloat percentWidthOfStepper = 0.30;            //should add up to 1.0
 
 @interface SKViewController ()
 
 @property (strong, nonatomic) UIScrollView * scrollView;
 @property (nonatomic) int numberOfScoreViews;
-@property (strong, nonatomic) NSMutableArray * scoreLabelArray;
+@property (strong, nonatomic) NSMutableArray * scoreFieldArray;
 @property (strong, nonatomic) NSMutableArray * scoreViewArray;
+@property (strong, nonatomic) NSMutableArray * stepperArray;
 
 @end
 
@@ -32,9 +33,10 @@ static CGFloat percentWidthOfStepper = 0.30;            //should add up to 1.0
     //initialize numberOfScoreViews
     self.numberOfScoreViews = 0;
     
-    //initialize scoreLabelArray and scoreViewArray
-    self.scoreLabelArray = [[NSMutableArray alloc] init];
+    //initialize scoreLabelArray, scoreViewArray, stepperArray
+    self.scoreFieldArray = [[NSMutableArray alloc] init];
     self.scoreViewArray = [[NSMutableArray alloc] init];
+    self.stepperArray = [[NSMutableArray alloc] init];
     
     self.title = @"TRM ScoreKeeper";
     UIBarButtonItem * addScoreViewButton = [[UIBarButtonItem alloc] initWithTitle:@"+" style:UIBarButtonItemStylePlain target:self action:@selector(newScoreView)];
@@ -78,8 +80,9 @@ static CGFloat percentWidthOfStepper = 0.30;            //should add up to 1.0
     if (self.numberOfScoreViews > 0)
     {
         [[self.scoreViewArray lastObject] removeFromSuperview];
-        [self.scoreLabelArray removeLastObject];
+        [self.scoreFieldArray removeLastObject];
         [self.scoreViewArray removeLastObject];
+        [self.stepperArray removeLastObject];
         self.numberOfScoreViews--;
         self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, scoreViewHeight * self.numberOfScoreViews);
     }
@@ -99,25 +102,29 @@ static CGFloat percentWidthOfStepper = 0.30;            //should add up to 1.0
     UIView * scoreView = [[UIView alloc] initWithFrame: CGRectMake(0, scoreViewHeight * index, self.view.frame.size.width, scoreViewHeight)];
     
     CGFloat widthOfNameField = (self.view.frame.size.width - 2 * margin) * percentWidthOfNameField;
-    CGFloat widthOfScoreLabel = (self.view.frame.size.width - 2 * margin) * percentWidthOfScoreLabel;
+    CGFloat widthOfScoreField = (self.view.frame.size.width - 2 * margin) * percentWidthOfScoreField;
     CGFloat widthOfStepper = (self.view.frame.size.width - 2 * margin) * percentWidthOfStepper;
     
     UITextField * nameField = [[UITextField alloc] initWithFrame:CGRectMake(margin, 0, widthOfNameField, scoreViewHeight)];
     nameField.placeholder = @"Name";
+    nameField.tag = -1;
     nameField.delegate = (id)self;
     
-    UILabel * scoreLabel = [[UILabel alloc] initWithFrame:CGRectMake(margin + widthOfNameField, 0, widthOfScoreLabel, scoreViewHeight)];
-    scoreLabel.text = @"0";
-    [self.scoreLabelArray insertObject:scoreLabel atIndex:index];
+    UITextField * scoreField = [[UITextField alloc] initWithFrame:CGRectMake(margin + widthOfNameField, 0, widthOfScoreField, scoreViewHeight)];
+    scoreField.text = @"0";
+    scoreField.tag = index;
+    scoreField.delegate = (id)self;
+    [self.scoreFieldArray insertObject:scoreField atIndex:index];
     
-    UIStepper * stepper = [[UIStepper alloc] initWithFrame:CGRectMake(margin + widthOfNameField + widthOfScoreLabel, 16, widthOfStepper, scoreViewHeight)];
+    UIStepper * stepper = [[UIStepper alloc] initWithFrame:CGRectMake(margin + widthOfNameField + widthOfScoreField, 16, widthOfStepper, scoreViewHeight)];
     stepper.minimumValue = -999;
     stepper.maximumValue = 9999;
     stepper.tag = index;
-    [stepper addTarget:self action:@selector(updateScoreLabel:) forControlEvents:UIControlEventValueChanged];
+    [stepper addTarget:self action:@selector(updateScoreField:) forControlEvents:UIControlEventValueChanged];
+    [self.stepperArray insertObject:stepper atIndex:index];
     
     [scoreView addSubview:nameField];
-    [scoreView addSubview:scoreLabel];
+    [scoreView addSubview:scoreField];
     [scoreView addSubview:stepper];
     [self.scrollView addSubview:scoreView];
     [self.scoreViewArray insertObject:scoreView atIndex:index];
@@ -130,19 +137,25 @@ static CGFloat percentWidthOfStepper = 0.30;            //should add up to 1.0
  * on sender.tag
  */
 
-- (void)updateScoreLabel:(UIStepper *)sender
+- (void)updateScoreField:(UIStepper *)sender
 {
-    UILabel * labelToBeUpdated = self.scoreLabelArray[sender.tag];
-    labelToBeUpdated.text = [NSString stringWithFormat:@"%.f", sender.value];
+    UITextField * fieldToBeUpdated = self.scoreFieldArray[sender.tag];
+    fieldToBeUpdated.text = [NSString stringWithFormat:@"%.f", sender.value];
 }
 
 /*
- * delegate that will dismiss the keyboard when the textFields return
+ * delegate that will dismiss the keyboard when the textFields return,
+ * if that textField is the scoreTextField, method with update appropriate stepper.value
  */
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
+    if (textField.tag != -1)
+    {
+        UIStepper * stepper = self.stepperArray[textField.tag];
+        stepper.value = [textField.text doubleValue];
+    }
     return YES;
 }
 
