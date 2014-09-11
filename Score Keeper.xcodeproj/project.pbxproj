@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3430AEDC19C11F4D009B4D6A /* SKViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3430AEDB19C11F4D009B4D6A /* SKViewController.m */; };
 		71DEBF141924955A0032F31F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71DEBF131924955A0032F31F /* Foundation.framework */; };
 		71DEBF161924955A0032F31F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71DEBF151924955A0032F31F /* CoreGraphics.framework */; };
 		71DEBF181924955A0032F31F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71DEBF171924955A0032F31F /* UIKit.framework */; };
@@ -32,6 +33,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3430AEDA19C11F4D009B4D6A /* SKViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKViewController.h; sourceTree = "<group>"; };
+		3430AEDB19C11F4D009B4D6A /* SKViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKViewController.m; sourceTree = "<group>"; };
 		71DEBF101924955A0032F31F /* Score Keeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Score Keeper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		71DEBF131924955A0032F31F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		71DEBF151924955A0032F31F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -107,6 +110,8 @@
 		71DEBF191924955A0032F31F /* Score Keeper */ = {
 			isa = PBXGroup;
 			children = (
+				3430AEDA19C11F4D009B4D6A /* SKViewController.h */,
+				3430AEDB19C11F4D009B4D6A /* SKViewController.m */,
 				71DEBF221924955A0032F31F /* SKAppDelegate.h */,
 				71DEBF231924955A0032F31F /* SKAppDelegate.m */,
 				71DEBF251924955A0032F31F /* Images.xcassets */,
@@ -241,6 +246,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				71DEBF241924955A0032F31F /* SKAppDelegate.m in Sources */,
+				3430AEDC19C11F4D009B4D6A /* SKViewController.m in Sources */,
 				71DEBF201924955A0032F31F /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -438,6 +444,7 @@
 				71DEBF3E1924955A0032F31F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		71DEBF3F1924955A0032F31F /* Build configuration list for PBXNativeTarget "Score KeeperTests" */ = {
 			isa = XCConfigurationList;
@@ -446,6 +453,7 @@
 				71DEBF411924955A0032F31F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
