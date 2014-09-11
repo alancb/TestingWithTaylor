@@ -37,8 +37,11 @@ static CGFloat percentWidthOfStepper = 0.30;            //should add up to 1.0
     self.scoreViewArray = [[NSMutableArray alloc] init];
     
     self.title = @"TRM ScoreKeeper";
-    UIBarButtonItem * addViewButton = [[UIBarButtonItem alloc] initWithTitle:@"+" style:UIBarButtonItemStylePlain target:self action:@selector(newScoreView)];
-    self.navigationItem.rightBarButtonItem = addViewButton;
+    UIBarButtonItem * addScoreViewButton = [[UIBarButtonItem alloc] initWithTitle:@"+" style:UIBarButtonItemStylePlain target:self action:@selector(newScoreView)];
+    self.navigationItem.rightBarButtonItem = addScoreViewButton;
+    
+    UIBarButtonItem * minusScoreViewButton = [[UIBarButtonItem alloc] initWithTitle:@"-" style:UIBarButtonItemStylePlain target:self action:@selector(removeScoreView)];
+    self.navigationItem.rightBarButtonItems = [self.navigationItem.rightBarButtonItems arrayByAddingObject:minusScoreViewButton];
     
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     //default of two score views to start with
@@ -54,16 +57,41 @@ static CGFloat percentWidthOfStepper = 0.30;            //should add up to 1.0
     // Dispose of any resources that can be recreated.
 }
 
+/*
+ * action for addScoreViewButton. This method calls addScoreView with current numberOfScoreView and
+ * addScoreView method will take appropriate steps add a new scoreView
+ */
+
 - (void)newScoreView
 {
     [self addScoreView:self.numberOfScoreViews];
+}
+
+/*
+ * action for minusScoreViewButton. This method will remove a scoreView if at least one exists.
+ * takes care of clean out appropriate arrays, decrements global numberOfScoreViews, and
+ * modifies the scrollView.contentSize
+ */
+
+- (void)removeScoreView
+{
+    if (self.numberOfScoreViews > 0)
+    {
+        [[self.scoreViewArray lastObject] removeFromSuperview];
+        [self.scoreLabelArray removeLastObject];
+        [self.scoreViewArray removeLastObject];
+        self.numberOfScoreViews--;
+        self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, scoreViewHeight * self.numberOfScoreViews);
+    }
 }
 
 
 /*
  * addScoreView creates a new score view that has a UITextField for a name, UILabel to display score 
  * (UIStepper value), and a UIStepper to control the UILabel. This method takes an int to track how many
- * scoreViews have been added.
+ * scoreViews have been added and updates after adding a scoreView. The scoreView is added to scoreViewArray
+ * in order to keep track of the scoreViews. This method updates the scrollView.contentSize based on number
+ * of current scoreViews
  */
 
 - (void)addScoreView:(int)index
