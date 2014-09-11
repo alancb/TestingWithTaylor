@@ -18,6 +18,8 @@ static CGFloat percentWidthOfStepper = 0.30;
 
 @property (strong, nonatomic) UILabel *label;
 @property (strong, nonatomic) UIScrollView * scrollView;
+@property (nonatomic) int numberOfScoreViews;
+@property (strong, nonatomic) NSMutableArray * scoreLabelArray;
 
 @end
 
@@ -27,6 +29,9 @@ static CGFloat percentWidthOfStepper = 0.30;
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    //intialize numberOfScoreViews
+    self.numberOfScoreViews = 0;
+    
     self.title = @"TRM ScoreKeeper";
     
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
@@ -34,8 +39,8 @@ static CGFloat percentWidthOfStepper = 0.30;
     [self.view addSubview:self.scrollView];
     
     //Add two scoreviews for testing
-    [self addScoreView:0];
-    [self addScoreView:1];
+    [self addScoreView:self.numberOfScoreViews];
+    [self addScoreView:self.numberOfScoreViews];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -56,15 +61,18 @@ static CGFloat percentWidthOfStepper = 0.30;
     
     UILabel * scoreLabel = [[UILabel alloc] initWithFrame:CGRectMake(margin + widthOfNameField, 0, widthOfScoreLabel, scoreViewHeight)];
     scoreLabel.text = @"0";
+    [self.scoreLabelArray insertObject:scoreLabel atIndex:index];
     
     UIStepper * stepper = [[UIStepper alloc] initWithFrame:CGRectMake(margin + widthOfNameField + widthOfScoreLabel, 16, widthOfStepper, scoreViewHeight)];
     stepper.minimumValue = -1000;
     stepper.maximumValue = 9999;
+    stepper.tag = index;
     
     [scoreView addSubview:nameField];
     [scoreView addSubview:scoreLabel];
     [scoreView addSubview:stepper];
     [self.scrollView addSubview:scoreView];
+    self.numberOfScoreViews++;
 }
 
 /*
