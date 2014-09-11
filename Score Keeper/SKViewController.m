@@ -19,6 +19,7 @@ static CGFloat percentWidthOfStepper = 0.30;            //should add up to 1.0
 @property (strong, nonatomic) UIScrollView * scrollView;
 @property (nonatomic) int numberOfScoreViews;
 @property (strong, nonatomic) NSMutableArray * scoreLabelArray;
+@property (strong, nonatomic) NSMutableArray * scoreViewArray;
 
 @end
 
@@ -31,17 +32,19 @@ static CGFloat percentWidthOfStepper = 0.30;            //should add up to 1.0
     //initialize numberOfScoreViews
     self.numberOfScoreViews = 0;
     
-    //initialize scoreLabelArray
+    //initialize scoreLabelArray and scoreViewArray
     self.scoreLabelArray = [[NSMutableArray alloc] init];
+    self.scoreViewArray = [[NSMutableArray alloc] init];
     
     self.title = @"TRM ScoreKeeper";
+    UIBarButtonItem * addViewButton = [[UIBarButtonItem alloc] initWithTitle:@"+" style:UIBarButtonItemStylePlain target:self action:@selector(newScoreView)];
+    self.navigationItem.rightBarButtonItem = addViewButton;
     
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height * 1.5);
+    //default of two score views to start with
+    self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, scoreViewHeight * 2);
     [self.view addSubview:self.scrollView];
     
-    [self addScoreView:self.numberOfScoreViews];
-    [self addScoreView:self.numberOfScoreViews];
     [self addScoreView:self.numberOfScoreViews];
     [self addScoreView:self.numberOfScoreViews];
 }
@@ -51,6 +54,11 @@ static CGFloat percentWidthOfStepper = 0.30;            //should add up to 1.0
     // Dispose of any resources that can be recreated.
 }
 
+- (void)newScoreView
+{
+    [self addScoreView:self.numberOfScoreViews];
+}
+
 
 /*
  * addScoreView creates a new score view that has a UITextField for a name, UILabel to display score 
@@ -58,7 +66,7 @@ static CGFloat percentWidthOfStepper = 0.30;            //should add up to 1.0
  * scoreViews have been added.
  */
 
--(void)addScoreView:(int)index
+- (void)addScoreView:(int)index
 {
     UIView * scoreView = [[UIView alloc] initWithFrame: CGRectMake(0, scoreViewHeight * index, self.view.frame.size.width, scoreViewHeight)];
     
@@ -84,7 +92,9 @@ static CGFloat percentWidthOfStepper = 0.30;            //should add up to 1.0
     [scoreView addSubview:scoreLabel];
     [scoreView addSubview:stepper];
     [self.scrollView addSubview:scoreView];
+    [self.scoreViewArray insertObject:scoreView atIndex:index];
     self.numberOfScoreViews++;
+    self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width, scoreViewHeight * self.numberOfScoreViews);
 }
 
 /* 
